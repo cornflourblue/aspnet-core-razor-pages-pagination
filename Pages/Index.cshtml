@@ -1,0 +1,65 @@
+﻿@page
+@model RazorPagesPagination.Pages.IndexModel
+
+<!-- pager parameter controls -->
+<form method="post" class="container border text-left pt-2 mb-3">
+    <div class="form-row form-group">
+        <div class="col">
+            <label asp-for="TotalItems">Total number of items</label>
+            <select asp-for="TotalItems" asp-items="Model.TotalItemsList" class="form-control form-control-sm" onchange="this.form.submit()"></select>
+        </div>
+        <div class="col">
+            <label asp-for="PageSize">Items per page</label>
+            <select asp-for="PageSize" asp-items="Model.PageSizeList" class="form-control form-control-sm" onchange="this.form.submit()"></select>
+        </div>
+        <div class="col">
+            <label asp-for="MaxPages">Max page links displayed</label>
+            <select asp-for="MaxPages" asp-items="Model.MaxPagesList" class="form-control form-control-sm" onchange="this.form.submit()"></select>
+        </div>
+    </div>
+</form>
+
+<!-- items being paged -->
+<table class="table table-sm table-striped table-bordered">
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>@item</td>
+        </tr>
+    }
+</table>				
+
+<!-- pager -->
+@if (Model.Pager.Pages.Any())
+{
+    <nav class="table-responsive">
+        <ul class="pagination justify-content-center d-flex flex-wrap">
+            @if (Model.Pager.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="/?p=@(Model.Pager.CurrentPage - 1)">Previous</a>
+                </li>
+            }
+
+            @foreach (var p in Model.Pager.Pages)
+            {
+                <li class="page-item @(p == Model.Pager.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="/?p=@p">@p</a>
+                </li>
+            }
+
+            @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/?p=@(Model.Pager.CurrentPage + 1)">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="/?p=@(Model.Pager.TotalPages)">Last</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
